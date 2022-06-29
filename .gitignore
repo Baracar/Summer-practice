@@ -4,4 +4,4 @@ Lib/
 Include/
 **.idea/
 **.pyc
-**pycache
+**__pycache__/
