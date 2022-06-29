@@ -1,0 +1,18 @@
+from django.db import models
+
+
+class Metrics(models.Model):
+    host = models.CharField(max_length=40)
+    minTime = models.FloatField(null=True)
+    maxTime = models.FloatField(null=True)
+    meanTime = models.FloatField(null=True)
+    counter = models.IntegerField(null=True)
+
+
+class Request(models.Model):
+    host = models.CharField(max_length=40)
+    time = models.FloatField()
+    method = models.CharField(max_length=10)
+    version = models.CharField(max_length=15)
+    metrics = models.ForeignKey(Metrics, on_delete=models.CASCADE)
+    timeStamp = models.DateTimeField(auto_now_add=True)
