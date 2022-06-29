@@ -28,22 +28,22 @@ def receive(request):
         m.meanTime = (m.meanTime * m.counter + r.time)/(m.counter + 1)
         m.counter = m.counter + 1
     m.save()
-    r.metrics = m
+    rcount, created= RequestCount.objects.get_or_create(host=r.host, method=r.method, version=r.version)
+    rcount.counter = rcount.counter + 1
+    rcount.save()
     r.save()
     return HttpResponse()
 
 
 def metrics(request):
-    datetimeShift = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(seconds=15)
-    reqs = Request.objects.filter(timeStamp__gte=datetimeShift)
+    recalculate()
+    reqs = RequestCount.objects.all()
     response = ""
     for req in reqs:
-        response += "request_duration_milliseconds{host=\""+str(req.host)
+        response += "request_count{host=\""+str(req.host)
         response += "\",method=\""+str(req.method)
         response += "\",version=\""+str(req.version)
-        response += "\",timestamp=\""+str(req.timeStamp)
-        response += "\"} "+str(req.time)+"\n"
-    recalculate()
+        response += "\"} "+str(req.counter)+"\n"
     mets = Metrics.objects.all()
     for met in mets:
         response += "max_request_duration_milliseconds{host=\"" + str(met.host)

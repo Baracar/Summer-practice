@@ -24,5 +24,10 @@ def recalculate():
             m.meanTime = 0
         m.counter = m.counter - 1
         m.save()
+
+        rcount = RequestCount.objects.get(host=req.host)
+        rcount.counter = rcount.counter - 1
+        rcount.save()
+
         req.delete()
     return
