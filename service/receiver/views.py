@@ -52,5 +52,4 @@ def metrics(request):
         response += "\"} "+str(met.minTime)+"\n"
         response += "mean_request_duration_milliseconds{host=\"" + str(met.host)
         response += "\"} "+str(met.meanTime)+"\n"
-    print(response)
     return HttpResponse(response)
